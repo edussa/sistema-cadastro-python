@@ -1,0 +1,207 @@
+﻿import os
+
+sistema_pessoas = []
+
+def limpar_tela():
+    os.system("cls" if os.name == "nt" else "clear")
+
+def pausar():
+    input("\n Pressione ENTER para continuar...")
+
+def menu():
+    print("=" * 40)
+    print("         SISTEMA DE CONTROLE")
+    print("=" * 40)
+    print("1️⃣  - Registrar Entrada")
+    print("2️⃣  - Registrar Saída")
+    print("3️⃣  - Listar Pessoas")
+    print("4️⃣  - Editar Informações")
+    print("5️⃣  - Sair")
+    print("=" * 40)
+
+def sub_menu():
+    print("\n SUBMENU DE LISTAGEM")
+    print("1️⃣  - Listar todas")
+    print("2️⃣  - Listar maiores de idade")
+    print("3️⃣  - Buscar por idade")
+    print("4️⃣  - Buscar por nome")
+    print("5️⃣  - Voltar ao menu principal")
+
+def validar_nome():
+    while True:
+        nome = input("Digite o nome: ").strip()
+        if len(nome) == 0 or any(char.isdigit() for char in nome):
+            print(" Nome inválido. Não use números e não deixe vazio.")
+        else:
+            return nome.title()
+
+def validar_idade():
+    while True:
+        try:
+            idade = int(input(" Digite a idade: "))
+            if 0 <= idade <= 120:
+                return idade
+            else:
+                print(" Idade inválida. Digite entre 0 e 120.")
+        except ValueError:
+            print(" Digite apenas números para a idade.")
+
+def registrar_entrada():
+    limpar_tela()
+    print(" REGISTRO DE ENTRADA\n")
+    nome = validar_nome()
+    idade = validar_idade()
+
+    if any(p["nome"].lower() == nome.lower() for p in sistema_pessoas):
+        print("\n Essa pessoa já está cadastrada.")
+        pausar()
+        return
+
+    pessoa = {"nome": nome, "idade": idade}
+    sistema_pessoas.append(pessoa)
+    print("\n Pessoa cadastrada com sucesso!")
+    print(" Dados:", pessoa)
+    pausar()
+
+def registrar_saida():
+    limpar_tela()
+    print(" REGISTRO DE SAÍDA\n")
+    nome_saida = input("Digite o nome da pessoa para remover: ").strip()
+    pessoa = buscar_pessoa(nome_saida)
+
+    if pessoa:
+        sistema_pessoas.remove(pessoa)
+        print("\n Pessoa removida com sucesso!")
+    else:
+        print("\n Pessoa não encontrada.")
+    pausar()
+
+def listar_pessoas():
+    limpar_tela()
+    print("📋 LISTA DE PESSOAS\n")
+    if not sistema_pessoas:
+        print(" Nenhuma pessoa cadastrada.")
+    else:
+        for i, p in enumerate(sistema_pessoas, start=1):
+            print(f"{i}.  {p['nome']} |  {p['idade']} anos")
+    pausar()
+
+def maiores_idade():
+    limpar_tela()
+    print(" MAIORES DE IDADE\n")
+    maiores = [p for p in sistema_pessoas if p["idade"] >= 18]
+
+    if maiores:
+        for p in maiores:
+            print(f" {p['nome']} |  {p['idade']} anos")
+    else:
+        print(" Nenhuma pessoa maior de idade encontrada.")
+    pausar()
+
+def listar_nome(busca_nome):
+    limpar_tela()
+    resultado = [p for p in sistema_pessoas if p["nome"].lower() == busca_nome.lower()]
+
+    if resultado:
+        for p in resultado:
+            print(f" {p['nome']} |  {p['idade']} anos")
+    else:
+        print(" Pessoa não encontrada.")
+    pausar()
+
+def interface_listar_nome():
+    nome = input("Digite o nome para buscar: ").strip()
+    listar_nome(nome)
+
+def listar_idade(busca_idade):
+    limpar_tela()
+    resultado = [p for p in sistema_pessoas if p["idade"] == busca_idade]
+
+    if resultado:
+        for p in resultado:
+            print(f" {p['nome']} |  {p['idade']} anos")
+    else:
+        print(" Nenhuma pessoa com essa idade encontrada.")
+    pausar()
+
+def interface_listar_idade():
+    try:
+        idade = int(input("Digite a idade para buscar: "))
+        listar_idade(idade)
+    except ValueError:
+        print(" Digite apenas números.")
+        pausar()
+
+def editar_pessoas():
+    limpar_tela()
+    print(" EDIÇÃO DE DADOS\n")
+    editar = input("Digite o nome da pessoa: ").strip()
+    pessoa = buscar_pessoa(editar)
+
+    if not pessoa:
+        print(" Pessoa não encontrada.")
+        pausar()
+        return
+
+    try:
+        nova_idade = int(input("Digite a nova idade: "))
+        pessoa["idade"] = nova_idade
+        print("\n Idade atualizada com sucesso!")
+        print(" Dados atualizados:", pessoa)
+    except ValueError:
+        print(" Digite apenas números.")
+    pausar()
+
+def buscar_pessoa(nome):
+    return next((p for p in sistema_pessoas if p["nome"].lower() == nome.lower()), None)
+
+def encerrar():
+    limpar_tela()
+    print(" Saindo do sistema... Até mais!")
+    return False
+
+def fluxo_sublista():
+    menu_lista = {
+        "1": listar_pessoas,
+        "2": maiores_idade,
+        "3": interface_listar_idade,
+        "4": interface_listar_nome
+    }
+
+    while True:
+        limpar_tela()
+        sub_menu()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "5":
+            break
+
+        acao = menu_lista.get(opcao)
+        if acao:
+            acao()
+        else:
+            print(" Opção inválida no submenu.")
+            pausar()
+
+menu_sistema = {
+    "1": registrar_entrada,
+    "2": registrar_saida,
+    "3": fluxo_sublista,
+    "4": editar_pessoas,
+    "5": encerrar
+}
+
+sistema_rodando = True
+while sistema_rodando:
+    limpar_tela()
+    menu()
+    opcao = input("Escolha uma opção: ").strip()
+    acao = menu_sistema.get(opcao)
+
+    if acao:
+        resultado = acao()
+        if resultado == False:
+            sistema_rodando = False
+    else:
+        print(" Opção inválida.")
+        pausar()
