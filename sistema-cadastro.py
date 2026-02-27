@@ -1,4 +1,4 @@
-﻿import os
+import os
 
 sistema_pessoas = []
 
@@ -12,20 +12,20 @@ def menu():
     print("=" * 40)
     print("         SISTEMA DE CONTROLE")
     print("=" * 40)
-    print("1️⃣  - Registrar Entrada")
-    print("2️⃣  - Registrar Saída")
-    print("3️⃣  - Listar Pessoas")
-    print("4️⃣  - Editar Informações")
-    print("5️⃣  - Sair")
+    print("1️  - Registrar Entrada")
+    print("2️  - Registrar Saída")
+    print("3️  - Listar Pessoas")
+    print("4️  - Editar Informações")
+    print("5️  - Sair")
     print("=" * 40)
 
 def sub_menu():
     print("\n SUBMENU DE LISTAGEM")
-    print("1️⃣  - Listar todas")
-    print("2️⃣  - Listar maiores de idade")
-    print("3️⃣  - Buscar por idade")
-    print("4️⃣  - Buscar por nome")
-    print("5️⃣  - Voltar ao menu principal")
+    print("1️  - Listar todas")
+    print("2️  - Listar maiores de idade")
+    print("3️  - Buscar por idade")
+    print("4️  - Buscar por nome")
+    print("5️  - Voltar ao menu principal")
 
 def validar_nome():
     while True:
@@ -78,7 +78,7 @@ def registrar_saida():
 
 def listar_pessoas():
     limpar_tela()
-    print("📋 LISTA DE PESSOAS\n")
+    print(" LISTA DE PESSOAS\n")
     if not sistema_pessoas:
         print(" Nenhuma pessoa cadastrada.")
     else:
